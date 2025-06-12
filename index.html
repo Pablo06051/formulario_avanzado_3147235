@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario con validacion avanzada</title>
-    <link rel="stylesheet" href="../_css/styles.css">
+    <link rel="stylesheet" href="./_css/styles.css">
 </head>
 <body>
 
-   <div class="container">
+     <div class="container">
         <h1>🎯 formulario avanzado</h1>
 
         <!--Barra de progreso-->
@@ -38,28 +38,28 @@
                  class="mensaje-error"
                  id="errorNombre"></div>
                <div
-                 class="mensaje-error"
+                 class="mensaje-exito"
                  id="exitoNombre"></div>
             </div>
             <!--apellido con validacion en tiempo real-->
 
 
              <div class="form-group">
-                <label for="nombres">Apellidos*</label>
+                <label for="apellidos">Apellidos*</label>
                 <input 
                 type="text"
-                id="Apellidos"
-                name="Apellidos"
+                id="apellidos"
+                name="apellidos"
                 required
-                placeholder="minimo un apelldo"
+                placeholder="minimo un apellido"
                 pattern="[A-Za-zÁ-Úá-úÑñüÜ ]{3,40}"/>
 
                <div 
                  class="mensaje-error"
-                 id="errorNombre"></div>
+                 id="errorApellidos"></div>
                <div
-                 class="mensaje-error"
-                 id="exitoNombre"></div>
+                 class="mensaje-exito"
+                 id="exitoApellidos"></div>
             </div>
             <!--email con validacion personalizada-->
 
@@ -90,16 +90,16 @@
                  name="password"
                  required
                  placeholder="minimo 8 caracteres"
-                 pattern="[A-Za-zÁ-Úá-ú0-9]"/>
+                 pattern=".{8,}"/>
             <div
              class="password-strength"
-             id="strength8ar"></div>
+             id="strengthBar"></div>
             <div
              class="mensaje-error"
-             id="ErrorPassword"></div>
+             id="errorPassword"></div>
             <div
              class="mensaje-exito"
-             id="ExitoPassword"></div>
+             id="exitoPassword"></div>
             </div>
 
             <!--confirmacion de contraseña-->
@@ -107,16 +107,16 @@
                 <label for="confirmacionPassword">Confirmar contraseña*</label>
                 <input 
                  type="password"
-                 is="confirmarPassword"
+                 id="confirmarPassword"
                  name="confirmarPassword"
                  required
                  placeholder="repita su contraseña"/>
             <div
              class="mensaje-error"
-             id="errorConfirmacion"></div>
+             id="errorConfirmar"></div>
             <div
              class="mensaje-exito"
-             id="ExitoConfirmacion"></div>
+             id="exitoConfirmar"></div>
             </div>
 
             <!--telefono con formato-->
@@ -129,13 +129,15 @@
                  name="telefono"
                  required
                  placeholder="300-435-5645"
+                 maxlength="12"
+                 minlength="12"
                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"/>
             <div
              class="mensaje-error"
              id="errorTelefono"></div>
             <div
              class="mensaje-exito"
-             id="ExitoTelefono"></div>
+             id="exitoTelefono"></div>
             </div>
             
             <!--fecha de nacimineto-->
@@ -149,10 +151,10 @@
                  required/>
             <div
              class="mensaje-error"
-             id="errorFecha"></div>
+             id="errorFechaNacimiento"></div>
             <div
              class="mensaje-exito"
-             id="ExitoFecha"></div>
+             id="exitoFechaNacimiento"></div>
             </div>
 
             <!--Comentarios con contador-->
@@ -160,15 +162,21 @@
             <div class="form-group">
                 <label for="Comentarios">Comentarios</label>
                 <textarea 
-                 name="comentariod" 
-                 id="coemntarios"
+                 name="Comentarios" 
+                 id="comentarios"
                  rows="4"
                  maxlength="500"
                  placeholder="Cuentanos sobre ti (maximo 500 caracteres)"></textarea>
                 <div class="contador-caracteres">
                  <span id="contadorComentarios">0</span>/500 caracteres
                 </div>
-            </div>
+              <div
+                class="mensaje-error"
+                id="errorComentarios"></div>
+              <div
+                class="mensaje-exito"
+                id="exitoComentarios"></div>
+              </div>
 
             <!--terminos y condiciones-->
             <div class="form-group">
@@ -197,9 +205,13 @@
             </button>
         </form>
 
-    </div>  <!--container-->
+        <div id="resumenDatos" style="display: none; margin-top: 30px; border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+          <h2>Resumen de Datos</h2>
+        </div>
+        <div id="contenidoResumen"></div>
+      </div>  <!--container-->
 
-     git statuis<!-- scripts -->
+     <!-- scripts -->
     <script src="./_js/javascript.js"></script>
     
 </body>

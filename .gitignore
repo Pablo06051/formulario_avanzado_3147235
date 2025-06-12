@@ -1,0 +1,24 @@
+# .gitignore para formulario avanzado
+
+# Ignorar dependencias de Node.js (si usas)
+node_modules/
+
+# Ignorar archivos de configuración de VS Code
+.vscode/
+
+# Ignorar archivos temporales del sistema
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de entorno (si usas)
+.env
+
+# Ignorar archivos de salida o build (si los generas)
+dist/
+build/
+
+# Ignorar archivos personales
+*.swp
+*.swo

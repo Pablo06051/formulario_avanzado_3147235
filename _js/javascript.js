@@ -35,20 +35,20 @@ document
 .getElementById('apellidos')
 .addEventListener('input', function () {
 const valor = this.value.trim();
-const Apellidos = valor
+const apellidos = valor
 .split(' ')
-.filter((Apellidos) => Apellidos.length > 0);
+.filter((apellido) => apellido.length > 0);
 if (valor.length < 3) {
 mostrarError(
-'errorApelldidos',
+'errorApellidos',
 'El apellido debe tener al menos 3 caracteres'
 );
 marcarCampo(this, false);
-} else if (nombres.length < 1) {
-mostrarError('errorNombre', 'Ingresa al menos 1 nombres');
+} else if (apellidos.length < 1) {
+mostrarError('errorApellidos', 'Ingresa al menos 1 apellido');
 marcarCampo(this, false);
 } else {
-mostrarExito('exitoNombre', '✓ Nombre válido');
+mostrarExito('exitoApellidos', '✓ Apellido válido');
 marcarCampo(this, true);
 }
 });
@@ -108,47 +108,68 @@ marcarCampo(this, true);
 });
 // Validación del teléfono con formato automático
 document
-.getElementById('telefono')
-.addEventListener('input', function () {
-// Aplicar formato automático
-let valor = this.value.replace(/\D/g, '');
-if (valor.length >= 6) {
-valor =
-valor.substring(0, 3) +
-'-' +
-valor.substring(3, 6) +
-'-' +
-valor.substring(6, 10);
-} else if (valor.length >= 3) {
-valor = valor.substring(0, 3) + '-' + valor.substring(3);
-}
-this.value = valor;
-const telefonoRegex = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/;
-if (!telefonoRegex.test(valor)) {
-mostrarError('errorTelefono', 'Formato: 300-123-4567');
-marcarCampo(this, false);
-} else {
-mostrarExito('exitoTelefono', '✓ Teléfono válido');
-marcarCampo(this, true);
-}
-});
+  .getElementById('telefono')
+  .addEventListener('input', function () {
+    // Solo números, máximo 10 dígitos
+    let valor = this.value.replace(/\D/g, '').substring(0, 10);
+
+    // Formatear: 300-123-4567
+    let formateado = valor;
+    if (valor.length > 6) {
+      formateado = valor.substring(0, 3) + '-' + valor.substring(3, 6) + '-' + valor.substring(6, 10);
+    } else if (valor.length > 3) {
+      formateado = valor.substring(0, 3) + '-' + valor.substring(3, 6);
+    }
+    this.value = formateado;
+
+      // Validar formato final 
+
+      const telefonoRegex = /^\d{3}-\d{3}-\d{4}$/;
+      if (this.value.length === 0) {
+          ocultarMensaje('errorTelefono');
+          ocultarMensaje('exitoTelefono');
+          marcarCampo(this, true); 
+      } else if (!telefonoRegex.test(this.value)) {
+            mostrarError('errorTelefono', 'Formato: 300-123-4567');
+            ocultarMensaje('exitoTelefono');
+            marcarCampo(this, false);
+      } else {
+            ocultarMensaje('errorTelefono');
+            mostrarExito('exitoTelefono', '✓ Teléfono válido');
+            marcarCampo(this, true);
+      }
+  });
 // Validación de fecha de nacimiento
 document
 .getElementById('fechaNacimiento')
 .addEventListener('change', function () {
-const fechaNacimiento = new Date(this.value);
-const hoy = new Date();
-const edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
-if (edad < 18) {
-mostrarError('errorFecha', 'Debes ser mayor de 18 años');
-marcarCampo(this, false);
-} else if (edad > 100) {
-mostrarError('errorFecha', 'Fecha no válida');
-marcarCampo(this, false);
-} else {
-mostrarExito('exitoFecha', `✓ Edad: ${edad} años`);
-marcarCampo(this, true);
-}
+   if (!this.value) {
+      ocultarMensaje('errorFechaNacimiento');
+      ocultarMensaje('exitoFechaNacimiento');
+      marcarCampo(this, true); // Campo opcional
+      return;
+   }
+      const fechaNacimiento = new Date(this.value);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+      const m = hoy.getMonth() - fechaNacimiento.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+          edad--;
+      }
+      if (fechaNacimiento > hoy) {
+            mostrarError('errorFechaNacimiento', 'La fecha no puede ser futura');
+            marcarCampo(this, false);
+      } else if (edad < 18) {
+            mostrarError('errorFechaNacimiento', 'Debes ser mayor de 18 años');
+            marcarCampo(this, false);
+      } else if (edad > 100) {
+            mostrarError('errorFechaNacimiento', 'Edad no válida, debe ser menor de 100 años');
+            marcarCampo(this, false);
+      } else {
+            ocultarMensaje('errorFechaNacimiento');
+            mostrarExito('exitoFechaNacimiento', `✓ Edad: ${edad} años`);
+            marcarCampo(this, true);
+      }
 });
 // Contador de caracteres para comentarios
 document.getElementById('comentarios').addEventListener('input', function () {
@@ -156,12 +177,21 @@ const contador = document.getElementById('contadorComentarios');
 contador.textContent = this.value.length;
 if (this.value.length > 450) {
 contador.style.color = '#dc3545';
+mostrarError('errorComentarios', 'Máximo 450 caracteres');
+ocultarMensaje('exitoComentarios');
+marcarCampo(this, false);
 } else if (this.value.length > 400) {
-contador.style.color = '#ffc107';
+      contador.style.color = '#ffc107';
+      ocultarMensaje('errorComentarios', 'Maximo 450 caracteres');
+      mostrarExito('exitoComentarios', 'Casi al límite');
+      marcarCampo(this, true);
 } else {
-contador.style.color = '#666';
+      contador.style.color = '#666';
+      ocultarMensaje('errorComentarios');
+      mostrarExito('exitoComentarios', '✓ Comentario válido');
+      marcarCampo(this, true);
 }
-marcarCampo(this, true); // Los comentarios son opcionales
+
 });
 // Validación de términos
 document
@@ -250,65 +280,27 @@ const todosValidos = Object.values(estadoValidacion).every(
 btnEnviar.disabled = !todosValidos;
 }
 // 🎯 MANEJO DEL ENVÍO DEL FORMULARIO
-formulario.addEventListener('submit', function (e) {
-e.preventDefault();
-const datosFormulario = new FormData(this);
-let resumenHTML = '';
-for (let [campo, valor] of datosFormulario.entries()) {
-if (valor && valor.trim() !== '') {
-const nombreCampo = obtenerNombreCampo(campo);
-resumenHTML += `
-<div class="dato-resumen">
-<span class="etiqueta-resumen">${nombreCampo}:
-</span> ${valor}
-</div>
-`;
-}
-}
-document.getElementById('contenidoResumen').innerHTML =
-resumenHTML;
-document.getElementById('resumenDatos').style.display = 'block';
-// Scroll suave hacia el resumen
-document.getElementById('resumenDatos').scrollIntoView({
-behavior: 'smooth',
-});
-console.log(
-'📊 Formulario enviado con validación completa:',
-Object.fromEntries(datosFormulario)
-);
-});
-function obtenerNombreCampo(campo) {
-const nombres = {
-nombreCompleto: 'Nombre completo',
-correo: 'Correo electrónico',
-password: 'Contraseña',
-confirmarPassword: 'Confirmación de contraseña',
-telefono: 'Teléfono',
-fechaNacimiento: 'Fecha de nacimiento',
-comentarios: 'Comentarios',
-terminos: 'Términos aceptados',
-};
-return nombres[campo] || campo;
-}
-function reiniciarFormulario() {
-formulario.reset();
-document.getElementById('resumenDatos').style.display = 'none';
-// Reiniciar estado de validación
-Object.keys(estadoValidacion).forEach((campo) => {
-estadoValidacion[campo] = false;
-});
-// Limpiar clases y mensajes
-campos.forEach((campo) => {
-campo.classList.remove('valido', 'invalido');
-});
-document
-.querySelectorAll('.mensaje-error, .mensaje-exito')
-.forEach((mensaje) => {
-mensaje.style.display = 'none';
-});
-actualizarProgreso();
-actualizarBotonEnvio();
-// Limpiar barra de fortaleza
+function mostrarResumenFormulario() {
+      const form = document.getElementById('formularioAvanzado');
+      const resumen = document.getElementById('contenidoResumen');
+      let html = '<ul style="list-style:none; padding: 0;">';
 
-document.getElementById('strengthBar').className = 'password-strength';}
 
+      html += `<li><strong>Nombres:</strong> ${form.nombres.value}</li>`;
+      html += `<li><strong>Apellidos:</strong> ${form.apellidos.value}</li>`;
+      html += `<li><strong>Email:</strong> ${form.correo.value}</li>`;
+      html += `<li><b>Contraseña:</b> (oculta)</li>`;
+      html += `<li><strong>Teléfono:</strong> ${form.telefono.value}</li>`;
+      html += `<li><strong>Fecha de Nacimiento:</strong> ${form.fechaNacimiento.value}</li>`;
+      html += `<li><strong>Comentarios:</strong> ${form.comentarios.value}</li>`;
+
+      html += '</ul>';
+      resumen.innerHTML = html;
+      document.getElementById('resumenDatos').style.display = 'block';
+      form.style.display = 'none';
+}
+
+document.getElementById('formularioAvanzado').addEventListener('submit', function (e) {
+  e.preventDefault();
+  mostrarResumenFormulario();
+});
